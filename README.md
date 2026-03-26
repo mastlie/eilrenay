@@ -31,7 +31,7 @@
 ***pubspec.yaml***
 ```yaml
 dependencies:
-  eilrenay: ^1.0.0
+  eilrenay: ^0.0.1
   provider: ^6.1.1
   shared_preferences: ^2.2.2
   google_fonts: ^6.1.0
@@ -386,7 +386,7 @@ mastlie
 **pubspec.yaml**
 ```yaml
 dependencies:
-  eilrenay: ^1.0.0
+  eilrenay: ^0.0.1
   provider: ^6.1.1
   shared_preferences: ^2.2.2
   google_fonts: ^6.1.0
