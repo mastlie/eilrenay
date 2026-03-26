@@ -1,7 +1,9 @@
 name: eilrenay
 description: "Flutter UI Library"
 version: 0.0.1
-homepage:
+homepage: https://github.com/mastlie/eilrenay
+repository: https://github.com/mastlie/eilrenay
+issue_tracker: https://github.com/mastlie/eilrenay/issues
 environment:
   sdk: ^3.11.3
   flutter: ">=1.17.0"

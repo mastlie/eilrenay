@@ -2,9 +2,9 @@
 
 **Flutter Helper Library** – Memudahkan manajemen tema, multi-bahasa, dan dialog dengan context extensions.
 
-[![Dart](https://img.shields.io/badge/Dart-3.0%2B-blue)](https://dart.dev)
 [![Flutter](https://img.shields.io/badge/Flutter-3.0%2B-blue)](https://flutter.dev)
-
+[![Dart](https://img.shields.io/badge/Dart-3.0%2B-blue)](https://dart.dev)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 ---
 
 ## 📖 Bahasa / Language
