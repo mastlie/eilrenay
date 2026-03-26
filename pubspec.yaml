@@ -1,0 +1,20 @@
+name: eilrenay
+description: "Flutter UI Library"
+version: 0.0.1
+homepage:
+environment:
+  sdk: ^3.11.3
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^8.0.2 # Untuk ambil font dari Google
+  shared_preferences: ^2.2.2  # Untuk menyimpan preferensi
+  provider: ^6.1.1  # Atau package state management lain yang kamu pakai
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+flutter:
