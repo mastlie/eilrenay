@@ -13,6 +13,19 @@ class Constant {
 
   static const double defaultPadding = 10;
   static const double defaultBorderRadius = 5;
+
+  static Color hoverColor = Colors.grey.withOpacity(0.2);
+  static Color highlightColor = Colors.grey.withOpacity(0.4);
+  static Color splashColor = Colors.grey.withOpacity(0.6);
+
+  static Color getButtonBackgroundColor(ThemeData theme) =>
+      theme.brightness == Brightness.dark
+      ? Color(0xff293331)
+      : Color(0xffffffff);
+  static Color getButtonBorderColor(ThemeData theme) =>
+      theme.brightness == Brightness.dark
+      ? Colors.grey.shade800
+      : Colors.grey.shade400;
   // ============ BOX HELPERS ============
   static Color getBoxBackgroundColor(ThemeData theme) =>
       theme.brightness == Brightness.dark
@@ -33,21 +46,50 @@ class Constant {
       ? Color(0xfff3f5f9)
       : Color(0xff1F2625);
 
-  static TextStyle getBodyTextStyle(ThemeData theme) => GoogleFonts.openSans(
+  static TextStyle getOpenSansTextStyle({
+    Color? color,
+    double? fontSize,
+    FontWeight? fontWeight,
+  }) => GoogleFonts.openSans(
+    color: color,
+    fontSize: fontSize,
+    fontWeight: fontWeight,
+  );
+
+  static TextStyle getBodyTextStyle(ThemeData theme) => getOpenSansTextStyle(
     color: getBodyTextColor(theme),
     fontSize: defaultFontSize,
   );
 
-  static TextStyle getButtonTextStyle(ThemeData theme) => GoogleFonts.openSans(
+  static TextStyle getButtonTextStyle(ThemeData theme) => getOpenSansTextStyle(
     color: getBodyTextColor(theme),
     fontSize: defaultFontSize,
   );
 
   static TextStyle getTextFieldTextStyle(ThemeData theme) =>
-      GoogleFonts.openSans(
+      getOpenSansTextStyle(
         color: getBodyTextColor(theme),
         fontSize: defaultFontSize,
       );
+
+  static Border borderAll(Color color) {
+    return Border.all(color: color, width: 1);
+  }
+
+  static Border borderTop(Color color) {
+    return Border(top: BorderSide(width: 1, color: color));
+  }
+
+  static Border borderBottom(Color color) {
+    return Border(bottom: BorderSide(width: 1, color: color));
+  }
+
+  static Border borderTopBottom(Color color) {
+    return Border(
+      top: BorderSide(width: 1, color: color),
+      bottom: BorderSide(width: 1, color: color),
+    );
+  }
 
   // ============ PADDING HELPERS ============
   static EdgeInsets paddingAll({double? value}) {
@@ -62,12 +104,30 @@ class Constant {
     return EdgeInsets.symmetric(horizontal: value ?? defaultPadding);
   }
 
+  static EdgeInsets paddingBottom({double? value}) {
+    return EdgeInsets.only(
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: value ?? defaultPadding,
+    );
+  }
+
+  static EdgeInsets paddingTop({double? value}) {
+    return EdgeInsets.only(
+      top: value ?? defaultPadding,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    );
+  }
+
   // ============ SIZED BOX HELPERS ============
-  static SizedBox spacingVertical(double? height) {
+  static SizedBox spacingVertical({double? height}) {
     return SizedBox(height: height ?? defaultPadding);
   }
 
-  static SizedBox spacingHorizontal(double? width) {
+  static SizedBox spacingHorizontal({double? width}) {
     return SizedBox(width: width ?? defaultPadding);
   }
 
@@ -116,8 +176,400 @@ class Box extends StatelessWidget {
     );
   }
 }
-// End Box
 
+// End Box
+class ButtonPurple extends StatelessWidget {
+  final String? text;
+  final IconData? icon;
+  final double? fontSize;
+  final VoidCallback? onTap;
+  final bool enabled;
+  const ButtonPurple({
+    this.text,
+    this.icon,
+    this.fontSize,
+    this.onTap,
+    this.enabled = true,
+    super.key,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      text: text,
+      icon: icon,
+      fontSize: fontSize,
+      enabled: enabled,
+      disabledColor: Colors.white60,
+      backgroundColor: Colors.deepPurple,
+      textColor: Colors.white,
+      onHoverBackgroundColor: Colors.black.withOpacity(0.3),
+      onHighlightBackgroundColor: Colors.black.withOpacity(0.5),
+      onSplashBackgroundColor: Colors.black.withOpacity(0.7),
+    );
+  }
+}
+
+class ButtonGreen extends StatelessWidget {
+  final String? text;
+  final IconData? icon;
+  final double? fontSize;
+  final VoidCallback? onTap;
+  final bool enabled;
+  const ButtonGreen({
+    this.text,
+    this.icon,
+    this.fontSize,
+    this.onTap,
+    this.enabled = true,
+    super.key,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      text: text,
+      icon: icon,
+      fontSize: fontSize,
+      enabled: enabled,
+      disabledColor: Colors.white60,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      onHoverBackgroundColor: Colors.black.withOpacity(0.3),
+      onHighlightBackgroundColor: Colors.black.withOpacity(0.5),
+      onSplashBackgroundColor: Colors.black.withOpacity(0.7),
+    );
+  }
+}
+
+class ButtonBlue extends StatelessWidget {
+  final String? text;
+  final IconData? icon;
+  final double? fontSize;
+  final VoidCallback? onTap;
+  final bool enabled;
+  const ButtonBlue({
+    this.text,
+    this.icon,
+    this.fontSize,
+    this.onTap,
+    this.enabled = true,
+    super.key,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      text: text,
+      icon: icon,
+      fontSize: fontSize,
+      enabled: enabled,
+      disabledColor: Colors.white60,
+      backgroundColor: Colors.blue,
+      textColor: Colors.white,
+      onHoverBackgroundColor: Colors.black.withOpacity(0.3),
+      onHighlightBackgroundColor: Colors.black.withOpacity(0.5),
+      onSplashBackgroundColor: Colors.black.withOpacity(0.7),
+    );
+  }
+}
+
+class ButtonBlack extends StatelessWidget {
+  final String? text;
+  final IconData? icon;
+  final double? fontSize;
+  final VoidCallback? onTap;
+  final bool enabled;
+  const ButtonBlack({
+    this.text,
+    this.icon,
+    this.fontSize,
+    this.onTap,
+    this.enabled = true,
+    super.key,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      text: text,
+      icon: icon,
+      fontSize: fontSize,
+      enabled: enabled,
+      disabledColor: Colors.white60,
+      backgroundColor: Color(0xff293331),
+      textColor: Colors.white,
+      onHoverBackgroundColor: Colors.grey.withOpacity(0.3),
+      onHighlightBackgroundColor: Colors.grey.withOpacity(0.5),
+      onSplashBackgroundColor: Colors.grey.withOpacity(0.7),
+    );
+  }
+}
+
+class ButtonWhite extends StatelessWidget {
+  final String? text;
+  final IconData? icon;
+  final double? fontSize;
+  final VoidCallback? onTap;
+  final bool enabled;
+  const ButtonWhite({
+    this.text,
+    this.icon,
+    this.fontSize,
+    this.onTap,
+    this.enabled = true,
+    super.key,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      text: text,
+      icon: icon,
+      fontSize: fontSize,
+      enabled: enabled,
+      disabledColor: Colors.grey,
+      backgroundColor: Color(0xfff5f5f5),
+      textColor: Color(0xff1F2625),
+      onHoverBackgroundColor: Colors.grey.withOpacity(0.3),
+      onHighlightBackgroundColor: Colors.grey.withOpacity(0.5),
+      onSplashBackgroundColor: Colors.grey.withOpacity(0.7),
+    );
+  }
+}
+
+class ButtonOrange extends StatelessWidget {
+  final String? text;
+  final IconData? icon;
+  final double? fontSize;
+  final VoidCallback? onTap;
+  final bool enabled;
+  const ButtonOrange({
+    this.text,
+    this.icon,
+    this.fontSize,
+    this.onTap,
+    this.enabled = true,
+    super.key,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Button(
+      text: text,
+      icon: icon,
+      fontSize: fontSize,
+      enabled: enabled,
+      disabledColor: Colors.white60,
+      backgroundColor: Colors.deepOrange,
+      textColor: Colors.white,
+      onHoverBackgroundColor: Colors.black.withOpacity(0.3),
+      onHighlightBackgroundColor: Colors.black.withOpacity(0.5),
+      onSplashBackgroundColor: Colors.black.withOpacity(0.7),
+    );
+  }
+}
+
+// Begin Button
+class Button extends StatefulWidget {
+  final EdgeInsets? padding;
+  final String? text;
+  final IconData? icon;
+  final double? fontSize;
+  final String? tooltip;
+  final VoidCallback? onTap;
+  final Color? textColor;
+  final Color? onHoverTextColor;
+  final Color? onHighlightTextColor;
+  final Color? onSplashTextColor;
+  final Color? onHoverBackgroundColor;
+  final Color? onHighlightBackgroundColor;
+  final Color? onSplashBackgroundColor;
+  final double? borderRadius;
+  final Color? backgroundColor;
+  final bool enabled;
+  final Color? disabledColor;
+  const Button({
+    this.text,
+    this.icon,
+    this.textColor,
+    this.fontSize,
+    this.tooltip,
+    this.onTap,
+    this.padding,
+    this.onHoverTextColor,
+    this.onHoverBackgroundColor,
+    this.onHighlightTextColor,
+    this.onHighlightBackgroundColor,
+    this.onSplashTextColor,
+    this.onSplashBackgroundColor,
+    this.borderRadius,
+    this.backgroundColor,
+    this.enabled = true,
+    this.disabledColor = Colors.grey,
+    super.key,
+  });
+  @override
+  State<Button> createState() => _ButtonState();
+}
+
+class _ButtonState extends State<Button> {
+  bool _isHover = false;
+  bool _isHighlight = false;
+  bool _isSplash = false;
+  Color _getTextColor(ThemeData theme) {
+    return widget.enabled
+        ? widget.textColor ?? Constant.getBodyTextColor(theme)
+        : widget.disabledColor ?? Colors.grey;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget button = Material(
+      color:
+          widget.backgroundColor ??
+          Constant.getButtonBackgroundColor(context.theme),
+      borderRadius: BorderRadius.all(
+        Radius.circular(widget.borderRadius ?? Constant.defaultBorderRadius),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.all(
+          Radius.circular(widget.borderRadius ?? Constant.defaultBorderRadius),
+        ),
+        hoverColor: widget.enabled
+            ? widget.onHoverBackgroundColor ?? Constant.hoverColor
+            : Colors.transparent,
+        highlightColor: widget.enabled
+            ? widget.onHighlightBackgroundColor ?? Constant.highlightColor
+            : Colors.transparent,
+        splashColor: widget.enabled
+            ? widget.onSplashBackgroundColor ?? Constant.splashColor
+            : Colors.transparent,
+        radius: Constant.defaultBorderRadius,
+        onTap: () {
+          if (widget.enabled) if (widget.onTap != null) widget.onTap!();
+        },
+        onHover: (value) {
+          setState(() {
+            _isHover = widget.enabled && value;
+          });
+        },
+        onHighlightChanged: (value) {
+          setState(() {
+            _isHighlight = widget.enabled && value;
+          });
+        },
+        onTapDown: (value) {
+          setState(() {
+            _isSplash = widget.enabled;
+          });
+        },
+        onTapUp: (value) {
+          setState(() {
+            _isSplash = false;
+          });
+        },
+        child: Container(
+          padding: widget.padding ?? Constant.paddingAll(),
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            border:
+                widget.backgroundColor == null ||
+                    widget.backgroundColor == Color(0xfff5f5f5)
+                ? Border.all(
+                    width: 1,
+                    color: Constant.getButtonBorderColor(context.theme),
+                  )
+                : null,
+            borderRadius: BorderRadius.circular(Constant.defaultBorderRadius),
+          ),
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (widget.icon != null)
+                  Icon(
+                    widget.icon!,
+                    size: widget.fontSize != null
+                        ? widget.fontSize! + 7
+                        : Constant.defaultFontSize + 7,
+                    color: _isHover
+                        ? widget.onHoverTextColor ??
+                              _getTextColor(context.theme)
+                        : _isHighlight
+                        ? widget.onHighlightTextColor ??
+                              _getTextColor(context.theme)
+                        : _isSplash
+                        ? widget.onSplashTextColor ??
+                              _getTextColor(context.theme)
+                        : _getTextColor(context.theme),
+                  ),
+                if (widget.icon != null && widget.text != null)
+                  Constant.spacingHorizontal(),
+
+                if (widget.text != null)
+                  Text(
+                    widget.text!,
+                    style: GoogleFonts.openSans(
+                      fontSize: widget.fontSize ?? Constant.defaultFontSize,
+                      color: _isHover
+                          ? widget.onHoverTextColor ??
+                                _getTextColor(context.theme)
+                          : _isHighlight
+                          ? widget.onHighlightTextColor ??
+                                _getTextColor(context.theme)
+                          : _isSplash
+                          ? widget.onSplashTextColor ??
+                                _getTextColor(context.theme)
+                          : _getTextColor(context.theme),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    if (widget.tooltip != null) {
+      button = Tooltip(
+        message: widget.tooltip!,
+        triggerMode: TooltipTriggerMode.longPress, // default long press
+        verticalOffset: 24,
+        child: button,
+      );
+    }
+
+    return button;
+  }
+}
+// End Button
+
+// Begin Responsive Class
+class Responsive extends StatelessWidget {
+  const Responsive({
+    super.key,
+    required this.mobile,
+    required this.tablet,
+    required this.desktop,
+  });
+
+  final Widget mobile;
+  final Widget tablet;
+  final Widget desktop;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth >= 1024) {
+          return desktop;
+        }
+        if (constraints.maxWidth >= 768 && constraints.maxWidth < 1024) {
+          return tablet;
+        } else {
+          return mobile;
+        }
+      },
+    );
+  }
+}
+
+// End Responsive Class
 // Begin Responsive Extension
 extension ResponsiveExtension on BuildContext {
   bool get isMobile => MediaQuery.of(this).size.width < 768;
@@ -194,7 +646,6 @@ class ThemeProvider extends ChangeNotifier {
 // Begin Abstract class untuk dictionary
 abstract class Dictionary {
   // General
-  String get appName;
   String get ok;
   String get cancel;
   String get yes;
@@ -204,16 +655,21 @@ abstract class Dictionary {
   String get edit;
 
   // Messages
+  String get defaultConfirmationTitle;
   String get confirmationDelete;
-  String get errorDefault;
-  String get infoDefault;
-  String get successDefault;
 
   // Auth
   String get username;
   String get password;
+  String get oldPassword;
+  String get newPassword;
+  String get confirmNewPassword;
   String get login;
   String get logout;
+  String get changePassword;
+  String get profile;
+  String get register;
+  String get forgotPassword;
 
   // Method untuk dynamic key (kalau perlu)
   String label(String key);
@@ -230,53 +686,45 @@ extension DictionaryExtension on Dictionary {
 // Begin Dictionary en
 class DictionaryEn implements Dictionary {
   @override
-  String get appName => 'My App';
-
-  @override
   String get ok => 'OK';
-
   @override
   String get cancel => 'Cancel';
-
   @override
   String get yes => 'Yes';
-
   @override
   String get no => 'No';
-
   @override
   String get delete => 'Delete';
-
   @override
   String get save => 'Save';
-
   @override
   String get edit => 'Edit';
-
+  @override
+  String get defaultConfirmationTitle => 'Confirmation';
   @override
   String get confirmationDelete => 'Are you sure you want to delete this item?';
-
-  @override
-  String get errorDefault => 'An error occurred. Please try again.';
-
-  @override
-  String get infoDefault => 'Information';
-
-  @override
-  String get successDefault => 'Operation completed successfully!';
-
   @override
   String get username => 'Username';
-
   @override
   String get password => 'Password';
-
+  @override
+  String get oldPassword => 'Old Password';
+  @override
+  String get newPassword => 'New Password';
+  @override
+  String get confirmNewPassword => 'Confirm New Password';
   @override
   String get login => 'Login';
-
   @override
   String get logout => 'Logout';
-
+  @override
+  String get changePassword => 'Change Password';
+  @override
+  String get profile => 'Profile';
+  @override
+  String get register => 'Register';
+  @override
+  String get forgotPassword => 'Forgot Password';
   @override
   String label(String key) {
     // Fallback untuk key yang belum didefinisikan
@@ -288,54 +736,46 @@ class DictionaryEn implements Dictionary {
 // Begin Dictionary id
 class DictionaryId implements Dictionary {
   @override
-  String get appName => 'Aplikasi Saya';
-
-  @override
   String get ok => 'OK';
-
   @override
   String get cancel => 'Batal';
-
   @override
   String get yes => 'Ya';
-
   @override
   String get no => 'Tidak';
-
   @override
   String get delete => 'Hapus';
-
   @override
   String get save => 'Simpan';
-
   @override
   String get edit => 'Edit';
-
+  @override
+  String get defaultConfirmationTitle => 'Konfirmasi';
   @override
   String get confirmationDelete =>
-      'Apakah Anda yakin ingin menghapus item ini?';
-
-  @override
-  String get errorDefault => 'Terjadi kesalahan. Silakan coba lagi.';
-
-  @override
-  String get infoDefault => 'Informasi';
-
-  @override
-  String get successDefault => 'Operasi berhasil!';
-
+      'Apakah Anda yakin ingin menghapus data ini?';
   @override
   String get username => 'Nama Pengguna';
-
   @override
   String get password => 'Kata Sandi';
-
+  @override
+  String get oldPassword => 'Kata Sandi Lama';
+  @override
+  String get newPassword => 'Kata Sandi Baru';
+  @override
+  String get confirmNewPassword => 'Ulang Kata Sandi Baru';
   @override
   String get login => 'Masuk';
-
   @override
   String get logout => 'Keluar';
-
+  @override
+  String get changePassword => 'Ganti Kata Sandi';
+  @override
+  String get profile => 'Profil';
+  @override
+  String get register => 'Daftar';
+  @override
+  String get forgotPassword => 'Lupa Kata Sandi';
   @override
   String label(String key) {
     // Fallback untuk key yang belum didefinisikan
@@ -425,36 +865,36 @@ class DialogHandler {
   DialogHandler(this.context, this.dictionary);
 
   // Show error message
-  void showErrorMessage({
-    String? message,
+  void showErrorMessage(
+    String message, {
     Duration duration = const Duration(seconds: 3),
   }) {
     _showSnackBar(
-      message: message ?? dictionary.errorDefault,
+      message: message,
       backgroundColor: Colors.red,
       duration: duration,
     );
   }
 
   // Show info message
-  void showInfoMessage({
-    String? message,
+  void showInfoMessage(
+    String message, {
     Duration duration = const Duration(seconds: 3),
   }) {
     _showSnackBar(
-      message: message ?? dictionary.infoDefault,
+      message: message,
       backgroundColor: Colors.blue,
       duration: duration,
     );
   }
 
   // Show success message
-  void showSuccessMessage({
-    String? message,
+  void showSuccessMessage(
+    String message, {
     Duration duration = const Duration(seconds: 3),
   }) {
     _showSnackBar(
-      message: message ?? dictionary.successDefault,
+      message: message,
       backgroundColor: Colors.green,
       duration: duration,
     );
@@ -471,7 +911,9 @@ class DialogHandler {
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: title != null ? Text(title) : null,
+        title: title != null
+            ? Text(title)
+            : Text(dictionary.defaultConfirmationTitle),
         content: Text(message),
         actions: [
           TextButton(
@@ -532,35 +974,31 @@ class DialogHandler {
 extension ContextExtensions on BuildContext {
   // 1. Theme extension - ambil theme data langsung
   ThemeData get theme => Theme.of(this);
-
   // 2. Dictionary extension - ambil dictionary dari language provider
   Dictionary get dictionary =>
       Provider.of<LanguageProvider>(this, listen: false).dictionary;
-
   // 3. Theme mode extension - untuk toggle theme
   String get themeMode =>
       Provider.of<ThemeProvider>(this, listen: false).themeMode;
-
   // 4. Language code extension
   String get languageCode =>
       Provider.of<LanguageProvider>(this, listen: false).languageCode;
-
   // 5. Dialog handler dengan context yang sudah ada
   DialogHandler get dialog => DialogHandler(this, dictionary);
 
   // 6. Shortcut untuk show error message
-  void showErrorMessage([String? message]) {
-    dialog.showErrorMessage(message: message);
+  void showErrorMessage(String message) {
+    dialog.showErrorMessage(message);
   }
 
   // 7. Shortcut untuk show info message
-  void showInfoMessage([String? message]) {
-    dialog.showInfoMessage(message: message);
+  void showInfoMessage(String message) {
+    dialog.showInfoMessage(message);
   }
 
   // 8. Shortcut untuk show success message
-  void showSuccessMessage([String? message]) {
-    dialog.showSuccessMessage(message: message);
+  void showSuccessMessage(String message) {
+    dialog.showSuccessMessage(message);
   }
 
   // 9. Shortcut untuk show confirmation dialog
@@ -594,9 +1032,6 @@ extension ContextExtensions on BuildContext {
 extension DictionaryExtensions on BuildContext {
   // Dictionary dengan akses langsung ke property
   Dictionary get dict => dictionary;
-
-  // Atau kalau mau lebih eksplisit
-  Dictionary get kamus => dictionary;
 }
 
 // End Context Extension

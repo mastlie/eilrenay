@@ -40,6 +40,7 @@ dependencies:
 ***main.dart***
 ```dart
 import 'package:eilrenay/eilrenay.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(const MyApp());
@@ -57,7 +58,7 @@ class MyApp extends StatelessWidget {
       child: Consumer2<ThemeProvider, LanguageProvider>(
         builder: (context, themeProvider, languageProvider, child) {
           return MaterialApp(
-            title: languageProvider.dictionary.appName,
+            title: 'A Flutter Demo',
             theme: Constant.getTheme(themeProvider.themeMode),
             home: const HomePage(),
           );
@@ -395,6 +396,7 @@ dependencies:
 **main.dart**
 ```dart
 import 'package:eilrenay/eilrenay.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(const MyApp());
@@ -412,7 +414,7 @@ class MyApp extends StatelessWidget {
       child: Consumer2<ThemeProvider, LanguageProvider>(
         builder: (context, themeProvider, languageProvider, child) {
           return MaterialApp(
-            title: languageProvider.dictionary.appName,
+            title: 'A Flutter Demo',
             theme: Constant.getTheme(themeProvider.themeMode),
             home: const HomePage(),
           );
@@ -421,6 +423,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 ```
 ## 📖 Cara Pakai
 ### 1. Theme
