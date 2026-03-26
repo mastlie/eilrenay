@@ -292,6 +292,7 @@ class ButtonBlack extends StatelessWidget {
       icon: icon,
       fontSize: fontSize,
       enabled: enabled,
+      borderColor: Colors.grey.shade800,
       disabledColor: Colors.white60,
       backgroundColor: Color(0xff293331),
       textColor: Colors.white,
@@ -324,6 +325,7 @@ class ButtonWhite extends StatelessWidget {
       fontSize: fontSize,
       enabled: enabled,
       disabledColor: Colors.grey,
+      borderColor: Colors.grey.shade300,
       backgroundColor: Color(0xfff5f5f5),
       textColor: Color(0xff1F2625),
       onHoverBackgroundColor: Colors.grey.withOpacity(0.3),
@@ -383,6 +385,7 @@ class Button extends StatefulWidget {
   final Color? backgroundColor;
   final bool enabled;
   final Color? disabledColor;
+  final Color? borderColor;
   const Button({
     this.text,
     this.icon,
@@ -401,6 +404,7 @@ class Button extends StatefulWidget {
     this.backgroundColor,
     this.enabled = true,
     this.disabledColor = Colors.grey,
+    this.borderColor,
     super.key,
   });
   @override
@@ -467,12 +471,11 @@ class _ButtonState extends State<Button> {
           padding: widget.padding ?? Constant.paddingAll(),
           decoration: BoxDecoration(
             color: Colors.transparent,
-            border:
-                widget.backgroundColor == null ||
-                    widget.backgroundColor == Color(0xfff5f5f5)
-                ? Border.all(
-                    width: 1,
-                    color: Constant.getButtonBorderColor(context.theme),
+            border: widget.borderColor != null
+                ? Constant.borderAll(widget.borderColor!)
+                : widget.backgroundColor == null
+                ? Constant.borderAll(
+                    Constant.getButtonBorderColor(context.theme),
                   )
                 : null,
             borderRadius: BorderRadius.circular(Constant.defaultBorderRadius),
