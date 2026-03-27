@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class Constant {
   // ============ DEFAULT VALUE ============
@@ -45,7 +46,18 @@ class Constant {
       theme.brightness == Brightness.dark
       ? Color(0xfff3f5f9)
       : Color(0xff1F2625);
-
+  static Color getTextBoxTextColor(ThemeData theme) =>
+      theme.brightness == Brightness.dark
+      ? Color(0xfff3f5f9)
+      : Color(0xff1F2625);
+  static Color getTextBoxLabelColor(ThemeData theme) =>
+      theme.brightness == Brightness.dark
+      ? Color(0xfff0f0f0)
+      : Color(0xff1F2625);
+  static Color getTextBoxHintColor(ThemeData theme) =>
+      theme.brightness == Brightness.dark
+      ? Color(0xffe9e9e9)
+      : Color(0xff1F2625);
   static TextStyle getOpenSansTextStyle({
     Color? color,
     double? fontSize,
@@ -55,22 +67,15 @@ class Constant {
     fontSize: fontSize,
     fontWeight: fontWeight,
   );
+  static Color getTextBoxBorderColor(ThemeData theme) =>
+      theme.brightness == Brightness.dark
+      ? Colors.grey.shade800
+      : Colors.grey.shade400;
 
   static TextStyle getBodyTextStyle(ThemeData theme) => getOpenSansTextStyle(
     color: getBodyTextColor(theme),
     fontSize: defaultFontSize,
   );
-
-  static TextStyle getButtonTextStyle(ThemeData theme) => getOpenSansTextStyle(
-    color: getBodyTextColor(theme),
-    fontSize: defaultFontSize,
-  );
-
-  static TextStyle getTextFieldTextStyle(ThemeData theme) =>
-      getOpenSansTextStyle(
-        color: getBodyTextColor(theme),
-        fontSize: defaultFontSize,
-      );
 
   static Border borderAll(Color color) {
     return Border.all(color: color, width: 1);
@@ -202,9 +207,9 @@ class ButtonPurple extends StatelessWidget {
       disabledColor: Colors.white60,
       backgroundColor: Colors.deepPurple,
       textColor: Colors.white,
-      onHoverBackgroundColor: Colors.black.withOpacity(0.3),
-      onHighlightBackgroundColor: Colors.black.withOpacity(0.5),
-      onSplashBackgroundColor: Colors.black.withOpacity(0.7),
+      onHoverBackgroundColor: Colors.black.withOpacity(0.2),
+      onHighlightBackgroundColor: Colors.black.withOpacity(0.4),
+      onSplashBackgroundColor: Colors.black.withOpacity(0.6),
     );
   }
 }
@@ -233,9 +238,9 @@ class ButtonGreen extends StatelessWidget {
       disabledColor: Colors.white60,
       backgroundColor: Colors.green,
       textColor: Colors.white,
-      onHoverBackgroundColor: Colors.black.withOpacity(0.3),
-      onHighlightBackgroundColor: Colors.black.withOpacity(0.5),
-      onSplashBackgroundColor: Colors.black.withOpacity(0.7),
+      onHoverBackgroundColor: Colors.black.withOpacity(0.2),
+      onHighlightBackgroundColor: Colors.black.withOpacity(0.4),
+      onSplashBackgroundColor: Colors.black.withOpacity(0.6),
     );
   }
 }
@@ -264,9 +269,9 @@ class ButtonBlue extends StatelessWidget {
       disabledColor: Colors.white60,
       backgroundColor: Colors.blue,
       textColor: Colors.white,
-      onHoverBackgroundColor: Colors.black.withOpacity(0.3),
-      onHighlightBackgroundColor: Colors.black.withOpacity(0.5),
-      onSplashBackgroundColor: Colors.black.withOpacity(0.7),
+      onHoverBackgroundColor: Colors.black.withOpacity(0.2),
+      onHighlightBackgroundColor: Colors.black.withOpacity(0.4),
+      onSplashBackgroundColor: Colors.black.withOpacity(0.6),
     );
   }
 }
@@ -366,6 +371,693 @@ class ButtonOrange extends StatelessWidget {
   }
 }
 
+// Begin TextBox - With Proper Spacing
+class TextBox extends StatefulWidget {
+  final bool enabled;
+  final bool readOnly;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final bool autofocus;
+  final String? labelText;
+  final String? hintText;
+  final double? width;
+  final String? value;
+  final int? maxLength;
+  final int? maxLines;
+  final IconData? suffixIcon;
+  final IconData? prefixIcon;
+  final bool obscureText;
+  final TextInputType? keyboardType;
+  final TextAlign textAlign;
+  final Function(String)? onChanged;
+  final bool showClearButton;
+  final VoidCallback? onTap;
+
+  const TextBox({
+    this.enabled = true,
+    this.readOnly = false,
+    this.controller,
+    this.focusNode,
+    this.autofocus = false,
+    this.labelText,
+    this.hintText,
+    this.width,
+    this.value,
+    this.maxLength,
+    this.maxLines,
+    this.suffixIcon,
+    this.prefixIcon,
+    this.onChanged,
+    this.showClearButton = false,
+    this.obscureText = false,
+    this.keyboardType,
+    this.textAlign = TextAlign.start,
+    this.onTap,
+    super.key,
+  });
+
+  @override
+  State<TextBox> createState() => _TextBoxState();
+}
+
+class _TextBoxState extends State<TextBox> {
+  late TextEditingController _controller;
+  late FocusNode _focusNode;
+  bool _hasText = false;
+  bool _obscureText = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+    _focusNode = widget.focusNode ?? FocusNode();
+    _obscureText = widget.obscureText;
+
+    if (widget.value != null && _controller.text.isEmpty) {
+      _controller.text = widget.value!;
+    }
+
+    _hasText = _controller.text.isNotEmpty;
+    _controller.addListener(_updateHasText);
+  }
+
+  @override
+  void didUpdateWidget(TextBox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.controller != oldWidget.controller) {
+      _controller = widget.controller ?? TextEditingController();
+    }
+    if (widget.value != oldWidget.value && widget.value != null) {
+      _controller.text = widget.value!;
+    }
+    if (widget.obscureText != oldWidget.obscureText) {
+      _obscureText = widget.obscureText;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_updateHasText);
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+    if (widget.focusNode == null) {
+      _focusNode.dispose();
+    }
+    super.dispose();
+  }
+
+  void _updateHasText() {
+    if (mounted && _hasText != _controller.text.isNotEmpty) {
+      setState(() {
+        _hasText = _controller.text.isNotEmpty;
+      });
+    }
+  }
+
+  void _toggleObscureText() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Build suffix icons
+    List<Widget> suffixIcons = [];
+
+    // Add clear button if needed
+    if (widget.showClearButton &&
+        _hasText &&
+        widget.enabled &&
+        !widget.readOnly) {
+      suffixIcons.add(
+        IconButton(
+          icon: Icon(Icons.close, size: Constant.defaultFontSize + 7),
+          onPressed: () {
+            _controller.clear();
+            if (widget.onChanged != null) {
+              widget.onChanged!('');
+            }
+          },
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
+        ),
+      );
+    }
+
+    // Add visibility toggle if obscureText is enabled
+    if (widget.obscureText && widget.enabled && !widget.readOnly) {
+      suffixIcons.add(
+        IconButton(
+          icon: Icon(
+            _obscureText ? Icons.visibility_off : Icons.visibility,
+            size: Constant.defaultFontSize + 7,
+          ),
+          onPressed: _toggleObscureText,
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
+        ),
+      );
+    }
+
+    // Add spacing at the end if there are icons
+    Widget? suffixIconWidget;
+    if (suffixIcons.isNotEmpty) {
+      suffixIconWidget = Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ...suffixIcons,
+          SizedBox(width: Constant.defaultPadding), // Add spacing from border
+        ],
+      );
+    } else if (widget.suffixIcon != null) {
+      suffixIconWidget = Padding(
+        padding: const EdgeInsets.only(right: Constant.defaultPadding),
+        child: Icon(widget.suffixIcon, size: Constant.defaultFontSize + 7),
+      );
+    }
+
+    return TextFormField(
+      controller: _controller,
+      focusNode: _focusNode,
+      autofocus: widget.autofocus,
+      readOnly: widget.readOnly,
+      obscureText: _obscureText,
+      keyboardType: widget.keyboardType,
+      textAlign: widget.textAlign,
+      enabled: widget.enabled,
+      maxLength: widget.maxLength,
+      maxLines: widget.obscureText ? 1 : widget.maxLines,
+      onTap: widget.onTap,
+      onChanged: widget.onChanged,
+      style: GoogleFonts.openSans(
+        color: widget.enabled
+            ? Constant.getTextBoxTextColor(context.theme)
+            : Colors.grey,
+        fontSize: Constant.defaultFontSize,
+      ),
+      decoration: InputDecoration(
+        prefixIcon: widget.prefixIcon != null
+            ? Icon(widget.prefixIcon, size: Constant.defaultFontSize + 7)
+            : null,
+        suffixIcon: suffixIconWidget,
+        labelText: widget.labelText,
+        labelStyle: GoogleFonts.openSans(
+          color: widget.enabled
+              ? Constant.getTextBoxLabelColor(context.theme)
+              : Colors.grey,
+          fontSize: Constant.defaultFontSize,
+        ),
+        hintText: widget.hintText,
+        hintStyle: GoogleFonts.openSans(
+          color: widget.enabled
+              ? Constant.getTextBoxHintColor(context.theme)
+              : Colors.grey,
+          fontSize: Constant.defaultFontSize,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(Constant.defaultBorderRadius),
+          ),
+          borderSide: BorderSide(
+            width: 1,
+            color: Constant.getTextBoxBorderColor(context.theme),
+          ),
+        ),
+        constraints: BoxConstraints(maxWidth: widget.width ?? double.infinity),
+      ),
+    );
+  }
+}
+
+// End TextBox
+// Begin TextBox Date - With Format Parameter
+class TextBoxDate extends StatefulWidget {
+  final bool enabled;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final bool autofocus;
+  final String? labelText;
+  final String? hintText;
+  final double? width;
+  final String? value;
+  final int? maxLength;
+  final int? maxLines;
+  final Function(String)? onChanged;
+  final String dateFormat; // Format parameter
+
+  const TextBoxDate({
+    this.enabled = true,
+    this.controller,
+    this.focusNode,
+    this.autofocus = false,
+    this.labelText,
+    this.hintText,
+    this.width,
+    this.value,
+    this.maxLength,
+    this.maxLines,
+    this.onChanged,
+    this.dateFormat = 'dd/MM/yyyy', // Default format
+    super.key,
+  });
+
+  @override
+  State<TextBoxDate> createState() => _TextBoxDateState();
+}
+
+class _TextBoxDateState extends State<TextBoxDate> {
+  late TextEditingController _controller;
+  late FocusNode _focusNode;
+  late DateFormat _dateFormatter;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+    _focusNode = widget.focusNode ?? FocusNode();
+
+    // Initialize date formatter dengan locale EN (default)
+    _dateFormatter = DateFormat(widget.dateFormat, 'en_US');
+
+    if (widget.value != null && _controller.text.isEmpty) {
+      _controller.text = widget.value!;
+    }
+  }
+
+  @override
+  void didUpdateWidget(TextBoxDate oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.controller != oldWidget.controller) {
+      _controller = widget.controller ?? TextEditingController();
+    }
+    if (widget.value != oldWidget.value && widget.value != null) {
+      _controller.text = widget.value!;
+    }
+    // Update formatter if format changed
+    if (widget.dateFormat != oldWidget.dateFormat) {
+      _dateFormatter = DateFormat(widget.dateFormat, 'en_US');
+      // Re-format existing date if any
+      if (_controller.text.isNotEmpty) {
+        try {
+          // Try to parse with old format first
+          DateFormat oldFormatter = DateFormat(oldWidget.dateFormat, 'en_US');
+          DateTime date = oldFormatter.parse(_controller.text);
+          _controller.text = _dateFormatter.format(date);
+        } catch (e) {
+          // If parsing fails, try to parse with current format
+          try {
+            DateTime date = _dateFormatter.parse(_controller.text);
+            _controller.text = _dateFormatter.format(date);
+          } catch (e2) {
+            // Keep existing text
+          }
+        }
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+    if (widget.focusNode == null) {
+      _focusNode.dispose();
+    }
+    super.dispose();
+  }
+
+  Future<void> _showDatePicker() async {
+    if (!widget.enabled) return;
+
+    DateTime? initialDate;
+    if (_controller.text.isNotEmpty) {
+      try {
+        // Try to parse with current formatter
+        initialDate = _dateFormatter.parse(_controller.text);
+      } catch (e) {
+        // Try alternative formats
+        try {
+          // Try dd/MM/yyyy format
+          DateFormat altFormatter = DateFormat('dd/MM/yyyy', 'en_US');
+          initialDate = altFormatter.parse(_controller.text);
+        } catch (e2) {
+          try {
+            // Try yyyy-MM-dd format
+            DateFormat altFormatter2 = DateFormat('yyyy-MM-dd', 'en_US');
+            initialDate = altFormatter2.parse(_controller.text);
+          } catch (e3) {
+            initialDate = DateTime.now();
+          }
+        }
+      }
+    } else {
+      initialDate = DateTime.now();
+    }
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2100),
+      locale: const Locale('en', 'US'),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Colors.blue,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      String formattedDate = _dateFormatter.format(picked);
+      _controller.text = formattedDate;
+      if (widget.onChanged != null) {
+        widget.onChanged!(formattedDate);
+      }
+      setState(() {});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextBox(
+      controller: _controller,
+      focusNode: _focusNode,
+      autofocus: widget.autofocus,
+      readOnly: true,
+      enabled: widget.enabled,
+      onTap: _showDatePicker,
+      prefixIcon: Icons.calendar_today,
+      labelText: widget.labelText,
+      hintText: widget.hintText ?? widget.dateFormat.toLowerCase(),
+      width: widget.width,
+      maxLength: widget.maxLength,
+      maxLines: widget.maxLines,
+      onChanged: widget.onChanged,
+      showClearButton: true,
+    );
+  }
+}
+// End TextBox Date
+
+// Begin TextBox Number - Fixed with Decimal Separator Handling
+class TextBoxNumber extends StatefulWidget {
+  final bool enabled;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final bool autofocus;
+  final String? labelText;
+  final String? hintText;
+  final double? width;
+  final String? value;
+  final int? maxLength;
+  final Function(String)? onChanged;
+  final bool showClearButton;
+  final int decimalPlaces;
+  final bool useThousandSeparator;
+
+  const TextBoxNumber({
+    this.enabled = true,
+    this.controller,
+    this.focusNode,
+    this.autofocus = false,
+    this.labelText,
+    this.hintText,
+    this.width,
+    this.value,
+    this.maxLength,
+    this.onChanged,
+    this.showClearButton = true,
+    this.decimalPlaces = 0,
+    this.useThousandSeparator = true,
+    super.key,
+  });
+
+  @override
+  State<TextBoxNumber> createState() => _TextBoxNumberState();
+}
+
+class _TextBoxNumberState extends State<TextBoxNumber> {
+  late TextEditingController _controller;
+  late FocusNode _focusNode;
+  bool _hasText = false;
+  bool _isFormatting = false;
+  bool _isDecimalPressed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+    _focusNode = widget.focusNode ?? FocusNode();
+
+    if (widget.value != null && _controller.text.isEmpty) {
+      _controller.text = widget.value!;
+    }
+
+    _hasText = _controller.text.isNotEmpty;
+    _controller.addListener(_onTextChanged);
+  }
+
+  @override
+  void didUpdateWidget(TextBoxNumber oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.controller != oldWidget.controller) {
+      _controller = widget.controller ?? TextEditingController();
+    }
+    if (widget.value != oldWidget.value && widget.value != null) {
+      _controller.text = widget.value!;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onTextChanged);
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+    if (widget.focusNode == null) {
+      _focusNode.dispose();
+    }
+    super.dispose();
+  }
+
+  int _calculateCursorPosition(
+    String oldText,
+    String newText,
+    int oldCursorPos,
+    bool isDecimalPressed,
+  ) {
+    if (oldCursorPos < 0 || oldCursorPos > oldText.length) {
+      return newText.length;
+    }
+
+    // If decimal was pressed, find position after decimal point
+    if (isDecimalPressed && widget.decimalPlaces > 0) {
+      int decimalIndex = newText.indexOf('.');
+      if (decimalIndex != -1) {
+        return decimalIndex + 1;
+      }
+    }
+
+    // Get the raw number part before cursor
+    String beforeCursor = oldText.substring(0, oldCursorPos);
+
+    // Extract only digits from before cursor
+    String digitsBeforeCursor = '';
+    for (int i = 0; i < beforeCursor.length; i++) {
+      String char = beforeCursor[i];
+      if (char.codeUnitAt(0) >= 48 && char.codeUnitAt(0) <= 57) {
+        digitsBeforeCursor += char;
+      }
+    }
+
+    // Count digits in the new text
+    int digitCount = 0;
+    int newCursorPos = 0;
+
+    for (int i = 0; i < newText.length; i++) {
+      String char = newText[i];
+      if (char.codeUnitAt(0) >= 48 && char.codeUnitAt(0) <= 57) {
+        digitCount++;
+        if (digitCount == digitsBeforeCursor.length) {
+          newCursorPos = i + 1;
+          break;
+        }
+      }
+    }
+
+    // If not found, put cursor at the end
+    if (newCursorPos == 0) {
+      newCursorPos = newText.length;
+    }
+
+    return newCursorPos.clamp(0, newText.length);
+  }
+
+  void _onTextChanged() {
+    if (_isFormatting) return;
+
+    String text = _controller.text;
+    int oldCursorPos = _controller.selection.baseOffset;
+
+    // Check if decimal was just pressed
+    _isDecimalPressed = false;
+    if (text.isNotEmpty && oldCursorPos > 0) {
+      String lastChar = text[oldCursorPos - 1];
+      if (lastChar == '.') {
+        _isDecimalPressed = true;
+      }
+    }
+
+    if (text.isEmpty) {
+      if (_hasText) {
+        setState(() {
+          _hasText = false;
+        });
+      }
+      if (widget.onChanged != null) {
+        widget.onChanged!('');
+      }
+      return;
+    }
+
+    setState(() {
+      _hasText = true;
+    });
+
+    // Extract only numbers and decimal point
+    String rawNumber = '';
+    bool hasDecimal = false;
+
+    for (int i = 0; i < text.length; i++) {
+      String char = text[i];
+      if (char.codeUnitAt(0) >= 48 && char.codeUnitAt(0) <= 57) {
+        rawNumber += char;
+      } else if (char == '.' && !hasDecimal && widget.decimalPlaces > 0) {
+        rawNumber += char;
+        hasDecimal = true;
+      }
+    }
+
+    if (rawNumber.isEmpty) {
+      _controller.text = '';
+      if (widget.onChanged != null) {
+        widget.onChanged!('');
+      }
+      return;
+    }
+
+    // Parse the number
+    num? number;
+    if (rawNumber.contains('.')) {
+      number = num.tryParse(rawNumber);
+    } else {
+      number = int.tryParse(rawNumber);
+    }
+
+    if (number != null) {
+      // Format the number
+      String formatted = _formatNumber(number);
+
+      if (formatted != text) {
+        // Calculate new cursor position
+        int newCursorPos = _calculateCursorPosition(
+          text,
+          formatted,
+          oldCursorPos,
+          _isDecimalPressed,
+        );
+
+        _isFormatting = true;
+        _controller.text = formatted;
+        _controller.selection = TextSelection.fromPosition(
+          TextPosition(offset: newCursorPos),
+        );
+        _isFormatting = false;
+      } else if (_isDecimalPressed) {
+        // If text didn't change but decimal was pressed (already has decimal)
+        // Move cursor after decimal point
+        int decimalIndex = formatted.indexOf('.');
+        if (decimalIndex != -1 && decimalIndex + 1 < formatted.length) {
+          _controller.selection = TextSelection.fromPosition(
+            TextPosition(offset: decimalIndex + 1),
+          );
+        }
+      }
+
+      if (widget.onChanged != null) {
+        widget.onChanged!(formatted);
+      }
+    }
+  }
+
+  String _formatNumber(num number) {
+    String result;
+
+    if (widget.decimalPlaces > 0) {
+      // Format with decimal places
+      double doubleValue = number.toDouble();
+      result = doubleValue.toStringAsFixed(widget.decimalPlaces);
+    } else {
+      // Integer
+      result = number.toString();
+    }
+
+    // Add thousand separators if needed
+    if (widget.useThousandSeparator) {
+      List<String> parts = result.split('.');
+      String integerPart = _addThousandSeparator(parts[0]);
+
+      if (parts.length > 1) {
+        return '$integerPart.${parts[1]}';
+      }
+      return integerPart;
+    }
+
+    return result;
+  }
+
+  String _addThousandSeparator(String number) {
+    String result = '';
+    int count = 0;
+
+    for (int i = number.length - 1; i >= 0; i--) {
+      result = number[i] + result;
+      count++;
+      if (count % 3 == 0 && i != 0) {
+        result = ',' + result;
+      }
+    }
+
+    return result;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextBox(
+      controller: _controller,
+      focusNode: _focusNode,
+      autofocus: widget.autofocus,
+      enabled: widget.enabled,
+      keyboardType: TextInputType.numberWithOptions(
+        decimal: widget.decimalPlaces > 0,
+      ),
+      textAlign: TextAlign.right,
+      maxLength: widget.maxLength,
+    );
+  }
+}
+
+// End TextBox Number
 // Begin Button
 class Button extends StatefulWidget {
   final EdgeInsets? padding;
